@@ -495,9 +495,9 @@ select {
 .ensemble__team {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 3rem;
+  gap: 4.5rem;
   margin-top: 5rem;
-  max-width: 1400px;
+  max-width: 1750px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -608,7 +608,7 @@ select {
 
 .ensemble__member-name {
   font-family: var(--font-subheading);
-  font-size: 1.75rem;
+  font-size: 1.8375rem;
   color: var(--light);
   margin-bottom: 0.5rem;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
@@ -632,7 +632,7 @@ select {
 
 .ensemble__member-instrument {
   font-family: var(--font-accent);
-  font-size: 0.875rem;
+  font-size: 0.92rem;
   color: var(--metallic);
   text-transform: uppercase;
   letter-spacing: 0.15em;
@@ -1609,7 +1609,7 @@ select {
 
   .ensemble__team {
     grid-template-columns: repeat(2, 1fr);
-    gap: 2.5rem;
+    gap: 3.75rem;
   }
 
   .repertuar__grid {
@@ -1737,7 +1737,7 @@ select {
 
   .ensemble__team {
     grid-template-columns: 1fr;
-    gap: 2rem;
+    gap: 3rem;
   }
 
   .repertuar__filters {
