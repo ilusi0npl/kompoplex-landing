@@ -83,6 +83,16 @@ if (canvas) {
     { r: 255, g: 255, b: 255 }  // białe
   ];
 
+  // Colorful palette for connections
+  const connectionColors = [
+    { r: 134, g: 45, b: 89 },   // #862d59 bordowy
+    { r: 255, g: 102, b: 153 }, // #ff6699 różowy
+    { r: 153, g: 0, b: 255 },   // #9900ff fioletowy
+    { r: 0, g: 153, b: 153 },   // #009999 turkusowy
+    { r: 255, g: 0, b: 102 },   // #ff0066 ciemny różowy
+    { r: 102, g: 0, b: 204 }    // #6600cc ciemny fioletowy
+  ];
+
   class Particle {
     constructor() {
       this.x = Math.random() * width;
@@ -92,6 +102,7 @@ if (canvas) {
       this.speedY = Math.random() * 0.5 - 0.25;
       this.opacity = Math.random() * 0.5 + 0.3;
       this.colorIndex = Math.floor(Math.random() * colors.length);
+      this.connectionColorIndex = Math.floor(Math.random() * connectionColors.length);
       this.hue = 0;
     }
 
@@ -189,7 +200,7 @@ if (canvas) {
       particle.draw();
     });
 
-    // Connections with rainbow colors
+    // Connections with colorful palette
     particles.forEach((a, i) => {
       particles.slice(i + 1).forEach(b => {
         const dx = a.x - b.x;
@@ -197,8 +208,8 @@ if (canvas) {
         const distance = Math.sqrt(dx * dx + dy * dy);
 
         if (distance < 150) {
-          const colorA = colors[a.colorIndex];
-          const colorB = colors[b.colorIndex];
+          const colorA = connectionColors[a.connectionColorIndex];
+          const colorB = connectionColors[b.connectionColorIndex];
           const r = (colorA.r + colorB.r) / 2;
           const g = (colorA.g + colorB.g) / 2;
           const blue = (colorA.b + colorB.b) / 2;
