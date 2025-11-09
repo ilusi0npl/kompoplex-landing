@@ -1,0 +1,28 @@
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Dependencies
+node_modules/
+
+# Build
+dist/
+build/
+
+# Vercel
+.vercel
+
+# Environment
+.env
+.env.local
+
+# Logs
+*.log
+npm-debug.log*
