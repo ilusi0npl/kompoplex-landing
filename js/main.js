@@ -135,23 +135,24 @@ if (canvas) {
   function animate() {
     ctx.clearRect(0, 0, width, height);
 
-    // Animated gradient background (subtle white)
+    // Animated gradient background
     const gradient = ctx.createLinearGradient(0, 0, width, height);
     const t = time * 0.5;
 
-    gradient.addColorStop(0, `rgba(255, 255, 255, ${0.02 + Math.sin(t) * 0.01})`);
-    gradient.addColorStop(0.5, `rgba(255, 255, 255, ${0.03 + Math.cos(t * 1.3) * 0.01})`);
-    gradient.addColorStop(1, `rgba(255, 255, 255, ${0.02 + Math.sin(t * 0.8) * 0.01})`);
+    gradient.addColorStop(0, `rgba(134, 45, 89, ${0.05 + Math.sin(t) * 0.03})`);
+    gradient.addColorStop(0.3, `rgba(153, 0, 255, ${0.08 + Math.cos(t * 1.3) * 0.04})`);
+    gradient.addColorStop(0.6, `rgba(0, 153, 153, ${0.06 + Math.sin(t * 0.8) * 0.03})`);
+    gradient.addColorStop(1, `rgba(102, 0, 204, ${0.05 + Math.cos(t * 1.1) * 0.03})`);
 
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, width, height);
 
-    // Multiple animated waves with white color
+    // Multiple animated waves with different colors
     time += 0.01;
 
-    // Wave 1
+    // Wave 1 - Pink
     ctx.beginPath();
-    ctx.strokeStyle = `rgba(255, 255, 255, ${0.2 + Math.sin(time * 2) * 0.05})`;
+    ctx.strokeStyle = `rgba(255, 102, 153, ${0.3 + Math.sin(time * 2) * 0.1})`;
     ctx.lineWidth = 2;
     ctx.moveTo(0, height / 2);
     for (let x = 0; x < width; x++) {
@@ -160,9 +161,9 @@ if (canvas) {
     }
     ctx.stroke();
 
-    // Wave 2
+    // Wave 2 - Purple
     ctx.beginPath();
-    ctx.strokeStyle = `rgba(255, 255, 255, ${0.15 + Math.cos(time * 1.5) * 0.05})`;
+    ctx.strokeStyle = `rgba(153, 0, 255, ${0.25 + Math.cos(time * 1.5) * 0.1})`;
     ctx.lineWidth = 2;
     ctx.moveTo(0, height / 2 + 50);
     for (let x = 0; x < width; x++) {
@@ -171,9 +172,9 @@ if (canvas) {
     }
     ctx.stroke();
 
-    // Wave 3
+    // Wave 3 - Cyan
     ctx.beginPath();
-    ctx.strokeStyle = `rgba(255, 255, 255, ${0.12 + Math.sin(time * 1.8) * 0.05})`;
+    ctx.strokeStyle = `rgba(0, 153, 153, ${0.2 + Math.sin(time * 1.8) * 0.1})`;
     ctx.lineWidth = 1.5;
     ctx.moveTo(0, height / 2 - 50);
     for (let x = 0; x < width; x++) {
