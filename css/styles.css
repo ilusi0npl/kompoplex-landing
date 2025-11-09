@@ -61,6 +61,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
 }
 
 body {
@@ -307,7 +308,8 @@ select {
   font-family: var(--font-accent);
   font-size: 1.5rem;
   font-weight: 600;
-  color: var(--metallic);
+  color: #ffffff;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
   letter-spacing: 0.125em;
   margin-bottom: 3rem;
   opacity: 0;
@@ -1788,6 +1790,10 @@ select {
 }
 
 @media screen and (max-width: 480px) {
+  :root {
+    --h1-font-size: 2.5rem;
+  }
+
   .container {
     padding: 0 1rem;
   }
