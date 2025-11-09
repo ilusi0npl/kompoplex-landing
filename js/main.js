@@ -409,6 +409,25 @@ galeriaItems.forEach((item, index) => {
   item.addEventListener('click', () => openLightbox(index));
 });
 
+// Add ensemble member images to lightbox
+const ensembleMemberWrappers = document.querySelectorAll('.ensemble__member-image-wrapper');
+ensembleMemberWrappers.forEach(wrapper => {
+  wrapper.addEventListener('click', () => {
+    const img = wrapper.querySelector('.ensemble__member-image');
+    // Find index in images array or add if not present
+    let imageIndex = images.findIndex(image => image.src === img.src);
+    if (imageIndex === -1) {
+      // Add to images array temporarily
+      imageIndex = images.length;
+      images.push({
+        src: img.src,
+        alt: img.alt
+      });
+    }
+    openLightbox(imageIndex);
+  });
+});
+
 lightboxClose.addEventListener('click', closeLightbox);
 lightboxNext.addEventListener('click', showNextImage);
 lightboxPrev.addEventListener('click', showPrevImage);
