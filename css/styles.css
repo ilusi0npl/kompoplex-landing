@@ -423,7 +423,7 @@ select {
   font-size: 4.5rem;
   letter-spacing: 0.05em;
   margin-bottom: 2rem;
-  color: var(--accent-blue);
+  color: #ffffff;
 }
 
 .ensemble__description {
