@@ -24,7 +24,8 @@
     <link rel="stylesheet" href="css/styles.css">
 
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
+    <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon.png">
 </head>
 <body>
 
@@ -41,19 +42,22 @@
                         <a href="#home" class="nav__link active-link">Home</a>
                     </li>
                     <li class="nav__item">
-                        <a href="#kalendarz" class="nav__link">Kalendarz</a>
-                    </li>
-                    <li class="nav__item">
                         <a href="#ensemble" class="nav__link">Ensemble</a>
                     </li>
                     <li class="nav__item">
                         <a href="#repertuar" class="nav__link">Repertuar</a>
                     </li>
                     <li class="nav__item">
-                        <a href="#kontakt" class="nav__link">Kontakt</a>
+                        <a href="#kalendarz" class="nav__link">Kalendarz</a>
+                    </li>
+                    <li class="nav__item">
+                        <a href="#galeria" class="nav__link">Galeria</a>
                     </li>
                     <li class="nav__item">
                         <a href="#fundacja" class="nav__link">Fundacja</a>
+                    </li>
+                    <li class="nav__item">
+                        <a href="#kontakt" class="nav__link">Kontakt</a>
                     </li>
                 </ul>
 
@@ -101,6 +105,7 @@
 
         <!-- Ensemble Section -->
         <section class="ensemble section" id="ensemble">
+            <canvas id="ensemble-canvas" class="section__canvas"></canvas>
             <div class="ensemble__container container">
                 <div class="ensemble__about">
                     <h2 class="ensemble__heading">KIM JESTEŚMY</h2>
@@ -170,9 +175,10 @@
 
         <!-- Repertuar Section -->
         <section class="repertuar section" id="repertuar">
+            <canvas id="repertuar-canvas" class="section__canvas"></canvas>
             <div class="repertuar__container container">
                 <h2 class="repertuar__title section-title">REPERTUAR</h2>
-                <p style="text-align: center; margin-bottom: 2rem; color: #666;">^ napisane specjalnie dla Ensemble Kompopolex</p>
+                <p style="text-align: center; margin-bottom: 2rem; color: #ffffff;">^ napisane specjalnie dla Ensemble Kompopolex</p>
 
                 <div class="repertuar__grid">
                     <div class="repertuar__card">
@@ -342,6 +348,7 @@
 
         <!-- Kalendarz Section -->
         <section class="kalendarz section" id="kalendarz">
+            <canvas id="kalendarz-canvas" class="section__canvas"></canvas>
             <div class="kalendarz__container container">
                 <h2 class="kalendarz__title section-title">NADCHODZĄCE<br>WYDARZENIA</h2>
 
@@ -407,6 +414,7 @@
 
         <!-- Galeria Section -->
         <section class="galeria section" id="galeria">
+            <canvas id="galeria-canvas" class="section__canvas"></canvas>
             <span class="galeria__label">GALERIA</span>
 
             <div class="galeria__grid">
@@ -465,6 +473,7 @@
 
         <!-- Fundacja Section -->
         <section class="fundacja section" id="fundacja">
+            <canvas id="fundacja-canvas" class="section__canvas"></canvas>
             <div class="fundacja__container container">
                 <h2 class="fundacja__title section-title">FUNDACJA</h2>
                 <p class="fundacja__subtitle">MISJA I CELE</p>
@@ -498,6 +507,7 @@
 
         <!-- Kontakt Section -->
         <section class="kontakt section" id="kontakt">
+            <canvas id="kontakt-canvas" class="section__canvas"></canvas>
             <div class="kontakt__container container">
                 <div class="kontakt__form-wrapper">
                     <h2 class="kontakt__title">SKONTAKTUJ SIĘ</h2>

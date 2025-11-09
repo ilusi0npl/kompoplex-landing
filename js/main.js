@@ -69,173 +69,223 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   });
 });
 
-/*=============== HERO CANVAS ANIMATION ===============*/
-const canvas = document.getElementById('hero-canvas');
-if (canvas) {
-  const ctx = canvas.getContext('2d');
-  let width = canvas.width = canvas.offsetWidth;
-  let height = canvas.height = canvas.offsetHeight;
-  let particles = [];
-  let time = 0;
+/*=============== PARTICLE CANVAS CLASS ===============*/
+class ParticleCanvas {
+  constructor(canvasId, options = {}) {
+    this.canvas = document.getElementById(canvasId);
+    if (!this.canvas) return;
 
-  // White color for particles
-  const colors = [
-    { r: 255, g: 255, b: 255 }  // białe
-  ];
+    this.ctx = this.canvas.getContext('2d');
+    this.particles = [];
+    this.time = 0;
 
-  // Colorful palette for connections
-  const connectionColors = [
-    { r: 134, g: 45, b: 89 },   // #862d59 bordowy
-    { r: 255, g: 102, b: 153 }, // #ff6699 różowy
-    { r: 153, g: 0, b: 255 },   // #9900ff fioletowy
-    { r: 0, g: 153, b: 153 },   // #009999 turkusowy
-    { r: 255, g: 0, b: 102 },   // #ff0066 ciemny różowy
-    { r: 102, g: 0, b: 204 }    // #6600cc ciemny fioletowy
-  ];
+    // Options with defaults - optimized for performance
+    this.options = {
+      subtle: options.subtle || false,
+      particleCount: options.subtle ? 30 : 50,  // Zmniejszono liczbę cząstek
+      particleSize: options.subtle ? 2 : 3,
+      particleSpeed: options.subtle ? 0.3 : 0.5,
+      particleOpacity: options.subtle ? 0.4 : 0.5,
+      connectionOpacity: options.subtle ? 0.15 : 0.3,
+      connectionDistance: options.subtle ? 120 : 150,  // Ograniczono dystans połączeń
+      shadowBlur: options.subtle ? 4 : 8,  // Zmniejszono blur dla lepszej wydajności
+      showWaves: options.subtle ? false : (options.showWaves !== false),  // Wyłączono fale dla subtle
+      showGradient: options.subtle ? false : (options.showGradient !== false),  // Wyłączono gradient dla subtle
+      waveOpacity: options.subtle ? 0.15 : 0.25,
+      waveStep: options.subtle ? 3 : 2,  // Co ile pikseli rysować falę (więcej = szybciej)
+      gradientOpacity: options.subtle ? 0.03 : 0.05
+    };
 
-  class Particle {
-    constructor() {
-      this.x = Math.random() * width;
-      this.y = Math.random() * height;
-      this.size = Math.random() * 3 + 1;
-      this.speedX = Math.random() * 0.5 - 0.25;
-      this.speedY = Math.random() * 0.5 - 0.25;
-      this.opacity = Math.random() * 0.5 + 0.3;
-      this.colorIndex = Math.floor(Math.random() * colors.length);
-      this.connectionColorIndex = Math.floor(Math.random() * connectionColors.length);
-      this.hue = 0;
-    }
+    // White color for particles
+    this.colors = [
+      { r: 255, g: 255, b: 255 }  // białe
+    ];
 
-    update() {
-      this.x += this.speedX;
-      this.y += this.speedY;
+    // Colorful palette for connections
+    this.connectionColors = [
+      { r: 134, g: 45, b: 89 },   // #862d59 bordowy
+      { r: 255, g: 102, b: 153 }, // #ff6699 różowy
+      { r: 153, g: 0, b: 255 },   // #9900ff fioletowy
+      { r: 0, g: 153, b: 153 },   // #009999 turkusowy
+      { r: 255, g: 0, b: 102 },   // #ff0066 ciemny różowy
+      { r: 102, g: 0, b: 204 }    // #6600cc ciemny fioletowy
+    ];
 
-      if (this.x > width) this.x = 0;
-      if (this.x < 0) this.x = width;
-      if (this.y > height) this.y = 0;
-      if (this.y < 0) this.y = height;
+    this.setCanvasSize();
+    this.init();
+    this.animate();
 
-      // Slowly shift colors
-      this.hue += 0.5;
-      if (this.hue >= 360) this.hue = 0;
-    }
+    // Handle resize with debounce for performance
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        this.setCanvasSize();
+        this.init();
+      }, 250);
+    });
+  }
 
-    draw() {
-      const color = colors[this.colorIndex];
-      ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${this.opacity})`;
+  setCanvasSize() {
+    this.width = this.canvas.width = this.canvas.offsetWidth;
+    this.height = this.canvas.height = this.canvas.offsetHeight;
+  }
 
-      // Add glow effect
-      ctx.shadowBlur = 15;
-      ctx.shadowColor = `rgba(${color.r}, ${color.g}, ${color.b}, 0.8)`;
+  createParticle() {
+    return {
+      x: Math.random() * this.width,
+      y: Math.random() * this.height,
+      size: Math.random() * this.options.particleSize + 1,
+      speedX: Math.random() * this.options.particleSpeed - this.options.particleSpeed / 2,
+      speedY: Math.random() * this.options.particleSpeed - this.options.particleSpeed / 2,
+      opacity: Math.random() * this.options.particleOpacity + 0.3,
+      colorIndex: Math.floor(Math.random() * this.colors.length),
+      connectionColorIndex: Math.floor(Math.random() * this.connectionColors.length)
+    };
+  }
 
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.shadowBlur = 0;
+  init() {
+    this.particles = [];
+    for (let i = 0; i < this.options.particleCount; i++) {
+      this.particles.push(this.createParticle());
     }
   }
 
-  function init() {
-    particles = [];
-    for (let i = 0; i < 80; i++) {
-      particles.push(new Particle());
-    }
+  updateParticle(particle) {
+    particle.x += particle.speedX;
+    particle.y += particle.speedY;
+
+    if (particle.x > this.width) particle.x = 0;
+    if (particle.x < 0) particle.x = this.width;
+    if (particle.y > this.height) particle.y = 0;
+    if (particle.y < 0) particle.y = this.height;
   }
 
-  function animate() {
-    ctx.clearRect(0, 0, width, height);
+  drawParticle(particle) {
+    const color = this.colors[particle.colorIndex];
+    this.ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${particle.opacity})`;
 
-    // Animated gradient background
-    const gradient = ctx.createLinearGradient(0, 0, width, height);
-    const t = time * 0.5;
+    // Add glow effect
+    this.ctx.shadowBlur = this.options.shadowBlur;
+    this.ctx.shadowColor = `rgba(${color.r}, ${color.g}, ${color.b}, 0.8)`;
 
-    gradient.addColorStop(0, `rgba(134, 45, 89, ${0.05 + Math.sin(t) * 0.03})`);
-    gradient.addColorStop(0.3, `rgba(153, 0, 255, ${0.08 + Math.cos(t * 1.3) * 0.04})`);
-    gradient.addColorStop(0.6, `rgba(0, 153, 153, ${0.06 + Math.sin(t * 0.8) * 0.03})`);
-    gradient.addColorStop(1, `rgba(102, 0, 204, ${0.05 + Math.cos(t * 1.1) * 0.03})`);
+    this.ctx.beginPath();
+    this.ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+    this.ctx.fill();
 
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, width, height);
+    this.ctx.shadowBlur = 0;
+  }
 
-    // Multiple animated waves with different colors
-    time += 0.01;
+  animate() {
+    this.ctx.clearRect(0, 0, this.width, this.height);
 
-    // Wave 1 - Pink
-    ctx.beginPath();
-    ctx.strokeStyle = `rgba(255, 102, 153, ${0.3 + Math.sin(time * 2) * 0.1})`;
-    ctx.lineWidth = 2;
-    ctx.moveTo(0, height / 2);
-    for (let x = 0; x < width; x++) {
-      const y = height / 2 + Math.sin(x * 0.01 + time) * 50 + Math.sin(x * 0.02 + time * 0.5) * 30;
-      ctx.lineTo(x, y);
+    // Animated gradient background (optional)
+    if (this.options.showGradient) {
+      const gradient = this.ctx.createLinearGradient(0, 0, this.width, this.height);
+      const t = this.time * 0.5;
+      const baseOpacity = this.options.gradientOpacity;
+
+      gradient.addColorStop(0, `rgba(134, 45, 89, ${baseOpacity + Math.sin(t) * 0.03})`);
+      gradient.addColorStop(0.3, `rgba(153, 0, 255, ${baseOpacity + Math.cos(t * 1.3) * 0.04})`);
+      gradient.addColorStop(0.6, `rgba(0, 153, 153, ${baseOpacity + Math.sin(t * 0.8) * 0.03})`);
+      gradient.addColorStop(1, `rgba(102, 0, 204, ${baseOpacity + Math.cos(t * 1.1) * 0.03})`);
+
+      this.ctx.fillStyle = gradient;
+      this.ctx.fillRect(0, 0, this.width, this.height);
     }
-    ctx.stroke();
 
-    // Wave 2 - Purple
-    ctx.beginPath();
-    ctx.strokeStyle = `rgba(153, 0, 255, ${0.25 + Math.cos(time * 1.5) * 0.1})`;
-    ctx.lineWidth = 2;
-    ctx.moveTo(0, height / 2 + 50);
-    for (let x = 0; x < width; x++) {
-      const y = height / 2 + 50 + Math.sin(x * 0.015 + time * 1.2) * 40 + Math.cos(x * 0.025 + time * 0.7) * 25;
-      ctx.lineTo(x, y);
+    this.time += 0.01;
+
+    // Multiple animated waves (optional) - optimized
+    if (this.options.showWaves) {
+      const waveOpacity = this.options.waveOpacity;
+      const step = this.options.waveStep;
+
+      // Wave 1 - Pink
+      this.ctx.beginPath();
+      this.ctx.strokeStyle = `rgba(255, 102, 153, ${waveOpacity + Math.sin(this.time * 2) * 0.1})`;
+      this.ctx.lineWidth = 2;
+      this.ctx.moveTo(0, this.height / 2);
+      for (let x = 0; x < this.width; x += step) {
+        const y = this.height / 2 + Math.sin(x * 0.01 + this.time) * 50 + Math.sin(x * 0.02 + this.time * 0.5) * 30;
+        this.ctx.lineTo(x, y);
+      }
+      this.ctx.stroke();
+
+      // Wave 2 - Purple
+      this.ctx.beginPath();
+      this.ctx.strokeStyle = `rgba(153, 0, 255, ${waveOpacity * 0.8 + Math.cos(this.time * 1.5) * 0.1})`;
+      this.ctx.lineWidth = 2;
+      this.ctx.moveTo(0, this.height / 2 + 50);
+      for (let x = 0; x < this.width; x += step) {
+        const y = this.height / 2 + 50 + Math.sin(x * 0.015 + this.time * 1.2) * 40 + Math.cos(x * 0.025 + this.time * 0.7) * 25;
+        this.ctx.lineTo(x, y);
+      }
+      this.ctx.stroke();
+
+      // Wave 3 - Cyan (pomijamy dla dodatkowej wydajności)
+      // this.ctx.beginPath();
+      // this.ctx.strokeStyle = `rgba(0, 153, 153, ${waveOpacity * 0.6 + Math.sin(this.time * 1.8) * 0.1})`;
+      // this.ctx.lineWidth = 1.5;
+      // this.ctx.moveTo(0, this.height / 2 - 50);
+      // for (let x = 0; x < this.width; x += step) {
+      //   const y = this.height / 2 - 50 + Math.cos(x * 0.012 + this.time * 0.9) * 35 + Math.sin(x * 0.018 + this.time * 1.3) * 20;
+      //   this.ctx.lineTo(x, y);
+      // }
+      // this.ctx.stroke();
     }
-    ctx.stroke();
 
-    // Wave 3 - Cyan
-    ctx.beginPath();
-    ctx.strokeStyle = `rgba(0, 153, 153, ${0.2 + Math.sin(time * 1.8) * 0.1})`;
-    ctx.lineWidth = 1.5;
-    ctx.moveTo(0, height / 2 - 50);
-    for (let x = 0; x < width; x++) {
-      const y = height / 2 - 50 + Math.cos(x * 0.012 + time * 0.9) * 35 + Math.sin(x * 0.018 + time * 1.3) * 20;
-      ctx.lineTo(x, y);
-    }
-    ctx.stroke();
-
-    // Particles
-    particles.forEach(particle => {
-      particle.update();
-      particle.draw();
+    // Update and draw particles
+    this.particles.forEach(particle => {
+      this.updateParticle(particle);
+      this.drawParticle(particle);
     });
 
-    // Connections with colorful palette
-    particles.forEach((a, i) => {
-      particles.slice(i + 1).forEach(b => {
+    // Draw connections - optimized
+    const maxDist = this.options.connectionDistance;
+    this.particles.forEach((a, i) => {
+      this.particles.slice(i + 1).forEach(b => {
         const dx = a.x - b.x;
         const dy = a.y - b.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
 
-        if (distance < 150) {
-          const colorA = connectionColors[a.connectionColorIndex];
-          const colorB = connectionColors[b.connectionColorIndex];
+        // Quick distance check przed sqrt (szybsze)
+        const distSq = dx * dx + dy * dy;
+        const maxDistSq = maxDist * maxDist;
+
+        if (distSq < maxDistSq) {
+          const distance = Math.sqrt(distSq);
+          const colorA = this.connectionColors[a.connectionColorIndex];
+          const colorB = this.connectionColors[b.connectionColorIndex];
           const r = (colorA.r + colorB.r) / 2;
           const g = (colorA.g + colorB.g) / 2;
           const blue = (colorA.b + colorB.b) / 2;
 
-          ctx.strokeStyle = `rgba(${r}, ${g}, ${blue}, ${0.3 * (1 - distance / 150)})`;
-          ctx.lineWidth = 1;
-          ctx.beginPath();
-          ctx.moveTo(a.x, a.y);
-          ctx.lineTo(b.x, b.y);
-          ctx.stroke();
+          this.ctx.strokeStyle = `rgba(${r}, ${g}, ${blue}, ${this.options.connectionOpacity * (1 - distance / maxDist)})`;
+          this.ctx.lineWidth = 1;
+          this.ctx.beginPath();
+          this.ctx.moveTo(a.x, a.y);
+          this.ctx.lineTo(b.x, b.y);
+          this.ctx.stroke();
         }
       });
     });
 
-    requestAnimationFrame(animate);
+    requestAnimationFrame(() => this.animate());
   }
-
-  window.addEventListener('resize', () => {
-    width = canvas.width = canvas.offsetWidth;
-    height = canvas.height = canvas.offsetHeight;
-    init();
-  });
-
-  init();
-  animate();
 }
+
+/*=============== INITIALIZE CANVAS ANIMATIONS ===============*/
+// Wait for page to be fully loaded
+window.addEventListener('load', () => {
+  // All canvases with subtle effect (optimized)
+  new ParticleCanvas('hero-canvas', { subtle: true });
+  new ParticleCanvas('ensemble-canvas', { subtle: true });
+  new ParticleCanvas('repertuar-canvas', { subtle: true });
+  new ParticleCanvas('kalendarz-canvas', { subtle: true });
+  new ParticleCanvas('galeria-canvas', { subtle: true });
+  new ParticleCanvas('fundacja-canvas', { subtle: true });
+  new ParticleCanvas('kontakt-canvas', { subtle: true });
+});
 
 /*=============== SCROLL REVEAL ANIMATIONS ===============*/
 const observerOptions = {
