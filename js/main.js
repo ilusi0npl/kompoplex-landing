@@ -263,6 +263,43 @@ document.querySelectorAll('.galeria__item').forEach((item, index) => {
   observer.observe(item);
 });
 
+// Observe ensemble members
+document.querySelectorAll('.ensemble__member').forEach((member, index) => {
+  member.style.transitionDelay = `${index * 0.15}s`;
+  observer.observe(member);
+});
+
+/*=============== ENSEMBLE MEMBERS 3D PARALLAX ===============*/
+document.querySelectorAll('.ensemble__member').forEach(member => {
+  const imageWrapper = member.querySelector('.ensemble__member-image-wrapper');
+
+  if (imageWrapper) {
+    member.addEventListener('mousemove', (e) => {
+      const rect = member.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+
+      const rotateX = (y - centerY) / 15;
+      const rotateY = (centerX - x) / 15;
+
+      imageWrapper.style.transform = `
+        translateY(-10px)
+        scale(1.02)
+        perspective(1000px)
+        rotateX(${-rotateX}deg)
+        rotateY(${rotateY}deg)
+      `;
+    });
+
+    member.addEventListener('mouseleave', () => {
+      imageWrapper.style.transform = 'translateY(0) scale(1) perspective(1000px) rotateX(0) rotateY(0)';
+    });
+  }
+});
+
 /*=============== ENSEMBLE STATS COUNTER ===============*/
 const statsObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {

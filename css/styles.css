@@ -462,6 +462,179 @@ select {
   letter-spacing: 0.15em;
 }
 
+/* Team Members */
+.ensemble__team {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3rem;
+  margin-top: 5rem;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.ensemble__member {
+  position: relative;
+  opacity: 0;
+  transform: translateY(50px) rotateX(10deg);
+  transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  perspective: 1000px;
+}
+
+.ensemble__member.animate {
+  opacity: 1;
+  transform: translateY(0) rotateX(0);
+}
+
+.ensemble__member-image-wrapper {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  transform-style: preserve-3d;
+}
+
+.ensemble__member-image-wrapper::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #ff6699, #9900ff, #009999, #ff6699);
+  background-size: 300% 300%;
+  border-radius: 14px;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  animation: borderGradient 3s ease infinite;
+}
+
+@keyframes borderGradient {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.ensemble__member-image-wrapper:hover::before {
+  opacity: 1;
+}
+
+.ensemble__member-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 12px;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.ensemble__member[data-instrument="percussion"] .ensemble__member-glow {
+  background: radial-gradient(circle at center, rgba(255, 102, 153, 0.4) 0%, transparent 70%);
+  box-shadow: inset 0 0 60px rgba(255, 102, 153, 0.3);
+}
+
+.ensemble__member[data-instrument="accordion"] .ensemble__member-glow {
+  background: radial-gradient(circle at center, rgba(153, 0, 255, 0.4) 0%, transparent 70%);
+  box-shadow: inset 0 0 60px rgba(153, 0, 255, 0.3);
+}
+
+.ensemble__member[data-instrument="computers"] .ensemble__member-glow {
+  background: radial-gradient(circle at center, rgba(0, 153, 153, 0.4) 0%, transparent 70%);
+  box-shadow: inset 0 0 60px rgba(0, 153, 153, 0.3);
+}
+
+.ensemble__member-image-wrapper:hover .ensemble__member-glow {
+  opacity: 1;
+}
+
+.ensemble__member-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 12px;
+  transition: all 0.4s ease;
+  filter: grayscale(30%) brightness(0.9);
+}
+
+.ensemble__member-image-wrapper:hover .ensemble__member-image {
+  filter: grayscale(0%) brightness(1.1);
+  transform: scale(1.05);
+}
+
+.ensemble__member-info {
+  margin-top: 1.5rem;
+  text-align: center;
+  transform: translateY(0);
+  transition: transform 0.4s ease;
+}
+
+.ensemble__member:hover .ensemble__member-info {
+  transform: translateY(-5px);
+}
+
+.ensemble__member-name {
+  font-family: var(--font-subheading);
+  font-size: 1.75rem;
+  color: var(--light);
+  margin-bottom: 0.5rem;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.ensemble__member[data-instrument="percussion"]:hover .ensemble__member-name {
+  color: #ff6699;
+  text-shadow: 0 0 20px rgba(255, 102, 153, 0.8);
+}
+
+.ensemble__member[data-instrument="accordion"]:hover .ensemble__member-name {
+  color: #9900ff;
+  text-shadow: 0 0 20px rgba(153, 0, 255, 0.8);
+}
+
+.ensemble__member[data-instrument="computers"]:hover .ensemble__member-name {
+  color: #009999;
+  text-shadow: 0 0 20px rgba(0, 153, 153, 0.8);
+}
+
+.ensemble__member-instrument {
+  font-family: var(--font-accent);
+  font-size: 0.875rem;
+  color: var(--metallic);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  transition: all 0.3s ease;
+}
+
+.ensemble__member:hover .ensemble__member-instrument {
+  letter-spacing: 0.2em;
+}
+
+/* Hover 3D effect */
+.ensemble__member-image-wrapper:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.4),
+    0 0 30px rgba(255, 102, 153, 0.3);
+}
+
+/* Stagger animation delays */
+.ensemble__member:nth-child(1) {
+  transition-delay: 0.1s;
+}
+
+.ensemble__member:nth-child(2) {
+  transition-delay: 0.2s;
+}
+
+.ensemble__member:nth-child(3) {
+  transition-delay: 0.3s;
+}
+
 /*=============== REPERTUAR SECTION ===============*/
 .repertuar {
   background-image: linear-gradient(40deg, rgba(137,41,255,0.7) 0%, rgba(154,77,255,0.7) 50%, rgba(109,5,255,0.7) 51%, rgba(112,10,255,0.7) 71%, rgba(0, 110, 90, 0.7) 90%);
@@ -1381,6 +1554,11 @@ select {
     position: static;
   }
 
+  .ensemble__team {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2.5rem;
+  }
+
   .repertuar__grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -1500,6 +1678,11 @@ select {
     grid-template-columns: 1fr;
   }
 
+  .ensemble__team {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
   .repertuar__filters {
     overflow-x: auto;
     justify-content: flex-start;
@@ -1579,13 +1762,33 @@ select {
   cursor: pointer;
   display: inline-block;
   transition: all 0.3s ease;
-  background: linear-gradient(45deg, #ff6699, #9900ff, #009999, #ff6699);
-  background-size: 300% 300%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: gradientShift 3s ease infinite;
   position: relative;
+  font-weight: 700;
+  color: #fff;
+  text-shadow:
+    0 0 20px rgba(255, 102, 153, 0.9),
+    0 0 40px rgba(153, 0, 255, 0.7),
+    0 0 60px rgba(0, 153, 153, 0.5),
+    2px 2px 4px rgba(0, 0, 0, 0.5);
+  filter: drop-shadow(0 0 15px rgba(255, 102, 153, 1));
+  animation: logoGlow 3s ease infinite;
+}
+
+@keyframes logoGlow {
+  0%, 100% {
+    text-shadow:
+      0 0 20px rgba(255, 102, 153, 0.9),
+      0 0 40px rgba(153, 0, 255, 0.7),
+      0 0 60px rgba(0, 153, 153, 0.5),
+      2px 2px 4px rgba(0, 0, 0, 0.5);
+  }
+  50% {
+    text-shadow:
+      0 0 30px rgba(255, 102, 153, 1),
+      0 0 50px rgba(153, 0, 255, 0.9),
+      0 0 70px rgba(0, 153, 153, 0.7),
+      2px 2px 4px rgba(0, 0, 0, 0.5);
+  }
 }
 
 @keyframes gradientShift {
