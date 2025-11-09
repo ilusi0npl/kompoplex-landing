@@ -206,9 +206,9 @@ if (canvas) {
           const colorB = colors[b.colorIndex];
           const r = (colorA.r + colorB.r) / 2;
           const g = (colorA.g + colorB.g) / 2;
-          const b = (colorA.b + colorB.b) / 2;
+          const blue = (colorA.b + colorB.b) / 2;
 
-          ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${0.3 * (1 - distance / 150)})`;
+          ctx.strokeStyle = `rgba(${r}, ${g}, ${blue}, ${0.3 * (1 - distance / 150)})`;
           ctx.lineWidth = 1;
           ctx.beginPath();
           ctx.moveTo(a.x, a.y);
