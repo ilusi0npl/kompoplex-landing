@@ -78,6 +78,16 @@ if (canvas) {
   let particles = [];
   let time = 0;
 
+  // Kompopolex color palette
+  const colors = [
+    { r: 134, g: 45, b: 89 },   // #862d59 bordowy
+    { r: 255, g: 102, b: 153 }, // #ff6699 różowy
+    { r: 153, g: 0, b: 255 },   // #9900ff fioletowy
+    { r: 0, g: 153, b: 153 },   // #009999 turkusowy
+    { r: 255, g: 0, b: 102 },   // #ff0066 ciemny różowy
+    { r: 102, g: 0, b: 204 }    // #6600cc ciemny fioletowy
+  ];
+
   class Particle {
     constructor() {
       this.x = Math.random() * width;
@@ -86,6 +96,8 @@ if (canvas) {
       this.speedX = Math.random() * 0.5 - 0.25;
       this.speedY = Math.random() * 0.5 - 0.25;
       this.opacity = Math.random() * 0.5 + 0.3;
+      this.colorIndex = Math.floor(Math.random() * colors.length);
+      this.hue = 0;
     }
 
     update() {
@@ -96,19 +108,31 @@ if (canvas) {
       if (this.x < 0) this.x = width;
       if (this.y > height) this.y = 0;
       if (this.y < 0) this.y = height;
+
+      // Slowly shift colors
+      this.hue += 0.5;
+      if (this.hue >= 360) this.hue = 0;
     }
 
     draw() {
-      ctx.fillStyle = `rgba(74, 144, 226, ${this.opacity})`;
+      const color = colors[this.colorIndex];
+      ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${this.opacity})`;
+
+      // Add glow effect
+      ctx.shadowBlur = 15;
+      ctx.shadowColor = `rgba(${color.r}, ${color.g}, ${color.b}, 0.8)`;
+
       ctx.beginPath();
       ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
       ctx.fill();
+
+      ctx.shadowBlur = 0;
     }
   }
 
   function init() {
     particles = [];
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 80; i++) {
       particles.push(new Particle());
     }
   }
@@ -116,22 +140,50 @@ if (canvas) {
   function animate() {
     ctx.clearRect(0, 0, width, height);
 
-    // Gradient background
+    // Animated gradient background
     const gradient = ctx.createLinearGradient(0, 0, width, height);
-    gradient.addColorStop(0, 'rgba(74, 144, 226, 0.05)');
-    gradient.addColorStop(1, 'rgba(26, 31, 46, 0.1)');
+    const t = time * 0.5;
+
+    gradient.addColorStop(0, `rgba(134, 45, 89, ${0.05 + Math.sin(t) * 0.03})`);
+    gradient.addColorStop(0.3, `rgba(153, 0, 255, ${0.08 + Math.cos(t * 1.3) * 0.04})`);
+    gradient.addColorStop(0.6, `rgba(0, 153, 153, ${0.06 + Math.sin(t * 0.8) * 0.03})`);
+    gradient.addColorStop(1, `rgba(102, 0, 204, ${0.05 + Math.cos(t * 1.1) * 0.03})`);
+
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, width, height);
 
-    // Animated wave
+    // Multiple animated waves with different colors
     time += 0.01;
+
+    // Wave 1 - Pink
     ctx.beginPath();
-    ctx.strokeStyle = 'rgba(74, 144, 226, 0.3)';
+    ctx.strokeStyle = `rgba(255, 102, 153, ${0.3 + Math.sin(time * 2) * 0.1})`;
     ctx.lineWidth = 2;
     ctx.moveTo(0, height / 2);
-
     for (let x = 0; x < width; x++) {
       const y = height / 2 + Math.sin(x * 0.01 + time) * 50 + Math.sin(x * 0.02 + time * 0.5) * 30;
+      ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+
+    // Wave 2 - Purple
+    ctx.beginPath();
+    ctx.strokeStyle = `rgba(153, 0, 255, ${0.25 + Math.cos(time * 1.5) * 0.1})`;
+    ctx.lineWidth = 2;
+    ctx.moveTo(0, height / 2 + 50);
+    for (let x = 0; x < width; x++) {
+      const y = height / 2 + 50 + Math.sin(x * 0.015 + time * 1.2) * 40 + Math.cos(x * 0.025 + time * 0.7) * 25;
+      ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+
+    // Wave 3 - Cyan
+    ctx.beginPath();
+    ctx.strokeStyle = `rgba(0, 153, 153, ${0.2 + Math.sin(time * 1.8) * 0.1})`;
+    ctx.lineWidth = 1.5;
+    ctx.moveTo(0, height / 2 - 50);
+    for (let x = 0; x < width; x++) {
+      const y = height / 2 - 50 + Math.cos(x * 0.012 + time * 0.9) * 35 + Math.sin(x * 0.018 + time * 1.3) * 20;
       ctx.lineTo(x, y);
     }
     ctx.stroke();
@@ -142,7 +194,7 @@ if (canvas) {
       particle.draw();
     });
 
-    // Connections
+    // Connections with rainbow colors
     particles.forEach((a, i) => {
       particles.slice(i + 1).forEach(b => {
         const dx = a.x - b.x;
@@ -150,7 +202,13 @@ if (canvas) {
         const distance = Math.sqrt(dx * dx + dy * dy);
 
         if (distance < 150) {
-          ctx.strokeStyle = `rgba(74, 144, 226, ${0.2 * (1 - distance / 150)})`;
+          const colorA = colors[a.colorIndex];
+          const colorB = colors[b.colorIndex];
+          const r = (colorA.r + colorB.r) / 2;
+          const g = (colorA.g + colorB.g) / 2;
+          const b = (colorA.b + colorB.b) / 2;
+
+          ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${0.3 * (1 - distance / 150)})`;
           ctx.lineWidth = 1;
           ctx.beginPath();
           ctx.moveTo(a.x, a.y);
@@ -420,6 +478,172 @@ window.addEventListener('scroll', () => {
     el.style.transform = `translateY(${scrolled * speed}px)`;
   });
 });
+
+/*=============== ANIMATED LOGO ===============*/
+const logo = document.querySelector('.nav__logo');
+
+if (logo) {
+  // Split logo text into individual letters
+  const text = logo.textContent;
+  logo.innerHTML = '';
+
+  text.split('').forEach((letter, index) => {
+    const span = document.createElement('span');
+    span.textContent = letter;
+    span.className = 'logo-letter';
+    span.style.animationDelay = `${index * 0.05}s`;
+    logo.appendChild(span);
+  });
+
+  // Rainbow gradient animation
+  let hue = 0;
+  setInterval(() => {
+    hue = (hue + 1) % 360;
+    logo.style.filter = `hue-rotate(${hue}deg)`;
+  }, 50);
+
+  // Mouse follow effect
+  logo.addEventListener('mousemove', (e) => {
+    const rect = logo.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+
+    const angleX = (y - centerY) / 10;
+    const angleY = (centerX - x) / 10;
+
+    logo.style.transform = `perspective(1000px) rotateX(${angleX}deg) rotateY(${angleY}deg) scale(1.05)`;
+  });
+
+  logo.addEventListener('mouseleave', () => {
+    logo.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+  });
+
+  // Glitch effect on click
+  logo.addEventListener('click', () => {
+    logo.classList.add('glitch-active');
+    setTimeout(() => {
+      logo.classList.remove('glitch-active');
+    }, 500);
+  });
+
+  // Pulse effect on scroll to top
+  let lastScrollY = window.pageYOffset;
+  window.addEventListener('scroll', () => {
+    const currentScrollY = window.pageYOffset;
+
+    if (currentScrollY < 100 && lastScrollY >= 100) {
+      logo.classList.add('pulse-once');
+      setTimeout(() => {
+        logo.classList.remove('pulse-once');
+      }, 600);
+    }
+
+    lastScrollY = currentScrollY;
+  });
+}
+
+/*=============== ENHANCED HERO ANIMATIONS ===============*/
+const heroSection = document.querySelector('.hero');
+const heroTitle = document.querySelector('.hero__title');
+const heroSubtitle = document.querySelector('.hero__subtitle');
+const heroTagline = document.querySelector('.hero__tagline');
+const heroButton = document.querySelector('.hero__button');
+
+if (heroSection) {
+  // Mouse parallax effect
+  heroSection.addEventListener('mousemove', (e) => {
+    const { clientX, clientY } = e;
+    const { offsetWidth, offsetHeight } = heroSection;
+
+    const moveX = (clientX / offsetWidth - 0.5) * 30;
+    const moveY = (clientY / offsetHeight - 0.5) * 30;
+
+    if (heroTitle) {
+      heroTitle.style.transform = `translate(${moveX}px, ${moveY}px)`;
+    }
+    if (heroSubtitle) {
+      heroSubtitle.style.transform = `translate(${-moveX * 0.5}px, ${-moveY * 0.5}px)`;
+    }
+    if (heroTagline) {
+      heroTagline.style.transform = `translate(${moveX * 0.3}px, ${moveY * 0.3}px)`;
+    }
+  });
+
+  heroSection.addEventListener('mouseleave', () => {
+    if (heroTitle) heroTitle.style.transform = 'translate(0, 0)';
+    if (heroSubtitle) heroSubtitle.style.transform = 'translate(0, 0)';
+    if (heroTagline) heroTagline.style.transform = 'translate(0, 0)';
+  });
+
+  // Typing effect for tagline
+  if (heroTagline) {
+    const originalText = heroTagline.textContent;
+    heroTagline.textContent = '';
+    let i = 0;
+
+    function typeWriter() {
+      if (i < originalText.length) {
+        heroTagline.textContent += originalText.charAt(i);
+        i++;
+        setTimeout(typeWriter, 100);
+      }
+    }
+
+    // Start typing after a delay
+    setTimeout(typeWriter, 1000);
+  }
+
+  // Particle effect on button hover
+  if (heroButton) {
+    heroButton.addEventListener('mouseenter', function() {
+      for (let i = 0; i < 10; i++) {
+        createParticle(this);
+      }
+    });
+  }
+
+  function createParticle(element) {
+    const particle = document.createElement('div');
+    particle.style.position = 'absolute';
+    particle.style.width = '5px';
+    particle.style.height = '5px';
+    particle.style.background = 'rgba(255, 102, 153, 0.8)';
+    particle.style.borderRadius = '50%';
+    particle.style.pointerEvents = 'none';
+
+    const rect = element.getBoundingClientRect();
+    particle.style.left = rect.left + Math.random() * rect.width + 'px';
+    particle.style.top = rect.top + Math.random() * rect.height + 'px';
+    particle.style.transition = 'all 1s ease-out';
+
+    document.body.appendChild(particle);
+
+    setTimeout(() => {
+      particle.style.transform = `translate(${(Math.random() - 0.5) * 100}px, ${(Math.random() - 0.5) * 100}px)`;
+      particle.style.opacity = '0';
+    }, 10);
+
+    setTimeout(() => {
+      particle.remove();
+    }, 1000);
+  }
+
+  // Rainbow text effect on title
+  if (heroTitle) {
+    let rainbowHue = 0;
+    setInterval(() => {
+      rainbowHue = (rainbowHue + 1) % 360;
+      heroTitle.style.textShadow = `
+        0 0 30px hsla(${rainbowHue}, 100%, 70%, 0.5),
+        0 0 60px hsla(${(rainbowHue + 60) % 360}, 100%, 70%, 0.3),
+        0 0 90px hsla(${(rainbowHue + 120) % 360}, 100%, 70%, 0.2)
+      `;
+    }, 50);
+  }
+}
 
 /*=============== LOG ON LOAD ===============*/
 console.log('%c✨ Ensemble Kompopolex ✨', 'font-size: 24px; font-weight: bold; color: #4a90e2;');
