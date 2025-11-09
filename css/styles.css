@@ -1282,24 +1282,25 @@ select {
   flex-shrink: 0;
   width: 24px;
   height: 24px;
-  color: var(--accent-blue);
+  color: #ffffff;
 }
 
 .kontakt__link {
   font-family: var(--font-body);
   font-size: 1.125rem;
-  color: var(--metallic);
+  color: #ffffff;
   transition: var(--transition-base);
 }
 
 .kontakt__link:hover {
-  color: var(--accent-blue);
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
 }
 
 .kontakt__text {
   font-family: var(--font-body);
   font-size: 1.125rem;
-  color: var(--metallic);
+  color: #ffffff;
 }
 
 .kontakt__social {
@@ -1314,13 +1315,14 @@ select {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--metallic);
+  color: #ffffff;
   transition: var(--transition-base);
 }
 
 .kontakt__social-link:hover {
-  color: var(--accent-blue);
+  color: #ffffff;
   transform: scale(1.1);
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.8));
 }
 
 /*=============== FOOTER ===============*/
