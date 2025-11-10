@@ -23,6 +23,10 @@ build/
 .env
 .env.local
 
+# Google Credentials (NEVER COMMIT!)
+google-credentials.json
+*-credentials.json
+
 # Logs
 *.log
 npm-debug.log*
