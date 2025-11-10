@@ -2,16 +2,39 @@
 
 ## ✅ Wymagana struktura arkusza
 
-Twój Google Sheet musi mieć **4 zakładki** (tabs) o dokładnie takich nazwach:
+Twój Google Sheet musi mieć **5 zakładek** (tabs) o dokładnie takich nazwach:
 
-1. `Kim_Jesteśmy`
-2. `Repertuar`
-3. `Wydarzenia`
-4. `Galeria`
+1. `O_Nas`
+2. `Kim_Jesteśmy`
+3. `Repertuar`
+4. `Wydarzenia`
+5. `Galeria`
 
 ---
 
-## 1️⃣ Zakładka: `Kim_Jesteśmy`
+## 1️⃣ Zakładka: `O_Nas`
+
+**Nagłówki (rząd 1):**
+```
+| A         | B         |
+|-----------|-----------|
+| Akapit_1  | Akapit_2  |
+```
+
+**Przykładowe dane (rząd 2):**
+```
+| Ensemble Kompopolex to zespół muzyki współczesnej i kameralnej. W jego skład wchodzą Aleksandra Gołaj (perkusja), Rafał Łuc (akordeon) i Jacek Sotomski (komputery). | Specjalizujemy się w wykonawstwie współczesnych kompozycji, często w premierowych wykonaniach utworów polskich i zagranicznych kompozytorów. Nasz repertuar obejmuje utwory na różnorodne składy instrumentalne, z naciskiem na eksperymentalne podejście do dźwięku i formy. |
+```
+
+**Uwagi:**
+- **Tylko 1 rząd danych** (rząd 2) - 2 akapity w 2 kolumnach
+- Kolumna **Akapit_1**: Pierwszy akapit opisu zespołu
+- Kolumna **Akapit_2**: Drugi akapit opisu zespołu
+- Maksymalna długość: brak limitu (ale staraj się trzymać 2-3 zdań na akapit)
+
+---
+
+## 2️⃣ Zakładka: `Kim_Jesteśmy`
 
 **Nagłówki (rząd 1):**
 ```
@@ -35,7 +58,7 @@ Twój Google Sheet musi mieć **4 zakładki** (tabs) o dokładnie takich nazwach
 
 ---
 
-## 2️⃣ Zakładka: `Repertuar`
+## 3️⃣ Zakładka: `Repertuar`
 
 **Nagłówki (rząd 1):**
 ```
@@ -59,7 +82,7 @@ Twój Google Sheet musi mieć **4 zakładki** (tabs) o dokładnie takich nazwach
 
 ---
 
-## 3️⃣ Zakładka: `Wydarzenia`
+## 4️⃣ Zakładka: `Wydarzenia`
 
 **Nagłówki (rząd 1):**
 ```
@@ -93,7 +116,7 @@ System automatycznie zamieni miesiące na polskie skróty:
 
 ---
 
-## 4️⃣ Zakładka: `Galeria`
+## 5️⃣ Zakładka: `Galeria`
 
 **Nagłówki (rząd 1):**
 ```
@@ -120,7 +143,8 @@ System automatycznie zamieni miesiące na polskie skróty:
 
 ### Checklist przed uruchomieniem buildu:
 
-1. ☐ **4 zakładki** o dokładnie takich nazwach (case-sensitive!):
+1. ☐ **5 zakładek** o dokładnie takich nazwach (case-sensitive!):
+   - `O_Nas` (z podkreślnikiem!)
    - `Kim_Jesteśmy` (z podkreślnikiem!)
    - `Repertuar`
    - `Wydarzenia`
@@ -172,9 +196,9 @@ System automatycznie zamieni miesiące na polskie skróty:
 
 ```
 Zakładki u dołu arkusza:
-┌──────────────┬──────────┬──────────┬─────────┐
-│ Kim_Jesteśmy │ Repertuar│ Wydarzenia│ Galeria │
-└──────────────┴──────────┴──────────┴─────────┘
+┌────────┬──────────────┬──────────┬──────────┬─────────┐
+│ O_Nas  │ Kim_Jesteśmy │ Repertuar│ Wydarzenia│ Galeria │
+└────────┴──────────────┴──────────┴──────────┴─────────┘
 
 Widok zakładki "Kim_Jesteśmy":
 ┌────────────────┬────────────┬─────────┬───────────────────────────────┐

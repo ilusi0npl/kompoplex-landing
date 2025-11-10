@@ -8,12 +8,13 @@ Ta strona używa **Google Sheets jako system zarządzania treścią** (CMS). To 
 
 ## 🎯 Co możesz edytować?
 
-Możesz zmieniać 4 sekcje strony:
+Możesz zmieniać 5 sekcji strony:
 
-1. **Kim Jesteśmy** - członkowie zespołu (imiona, instrumenty, zdjęcia)
-2. **Repertuar** - lista utworów muzycznych
-3. **Nadchodzące Wydarzenia** - kalendarz koncertów
-4. **Galeria** - zdjęcia zespołu
+1. **O Nas** - 2 akapity z opisem zespołu
+2. **Kim Jesteśmy** - członkowie zespołu (imiona, instrumenty, zdjęcia)
+3. **Repertuar** - lista utworów muzycznych
+4. **Nadchodzące Wydarzenia** - kalendarz koncertów
+5. **Galeria** - zdjęcia zespołu
 
 ---
 
@@ -24,9 +25,9 @@ Możesz zmieniać 4 sekcje strony:
 https://docs.google.com/spreadsheets/d/1jV1dJjoYMBdoefnTCs4bi7INElHHeatKg96VBv6M_S8/edit
 ```
 
-**Arkusz ma 4 zakładki** (dolny pasek):
+**Arkusz ma 5 zakładek** (dolny pasek):
 ```
-[Kim_Jesteśmy] [Repertuar] [Wydarzenia] [Galeria]
+[O_Nas] [Kim_Jesteśmy] [Repertuar] [Wydarzenia] [Galeria]
 ```
 
 ---
@@ -79,7 +80,36 @@ Nic nie musisz robić! Zmiany pojawią się na stronie w ciągu **5 minut** od z
 
 ## 📋 Instrukcje dla każdej sekcji
 
-### 1️⃣ Zakładka: Kim_Jesteśmy
+### 1️⃣ Zakładka: O_Nas
+
+**Kolumny:**
+```
+| Akapit_1                                      | Akapit_2                                      |
+|-----------------------------------------------|-----------------------------------------------|
+| Ensemble Kompopolex to zespół muzyki...      | Specjalizujemy się w wykonawstwie...         |
+```
+
+**Jak edytować:**
+- **Akapit_1**: Pierwszy akapit opisu zespołu (2-3 zdania)
+- **Akapit_2**: Drugi akapit opisu zespołu (2-3 zdania)
+- **TYLKO 1 rząd danych** (rząd 2) - nie dodawaj więcej rzędów!
+
+**💡 Tips:**
+- Te akapity wyświetlają się w sekcji "Kim Jesteśmy" na stronie
+- Staraj się trzymać 2-3 zdań na akapit dla czytelności
+- Możesz używać polskich znaków (ą, ę, ć, etc.)
+- Możesz używać HTML tagów jak `<strong>` dla pogrubienia
+
+**⚠️ Uwagi:**
+- To jedyna zakładka z **tylko 1 rzędem danych**
+- Jeśli dodasz więcej rzędów, tylko pierwszy będzie użyty
+
+**Szablon CSV:**
+Zobacz `google-sheet-templates/O_Nas.csv` - możesz skopiować i wkleić gotowe dane!
+
+---
+
+### 2️⃣ Zakładka: Kim_Jesteśmy
 
 **Kolumny:**
 ```
@@ -99,7 +129,7 @@ Nic nie musisz robić! Zmiany pojawią się na stronie w ciągu **5 minut** od z
 
 ---
 
-### 2️⃣ Zakładka: Repertuar
+### 3️⃣ Zakładka: Repertuar
 
 **Kolumny:**
 ```
@@ -119,7 +149,7 @@ Nic nie musisz robić! Zmiany pojawią się na stronie w ciągu **5 minut** od z
 
 ---
 
-### 3️⃣ Zakładka: Wydarzenia
+### 4️⃣ Zakładka: Wydarzenia
 
 **Kolumny:**
 ```
@@ -153,7 +183,7 @@ Jeśli wpiszesz datę niepoprawnie, wydarzenie może się nie wyświetlić!
 
 ---
 
-### 4️⃣ Zakładka: Galeria
+### 5️⃣ Zakładka: Galeria
 
 **Kolumny:**
 ```
@@ -245,6 +275,7 @@ Jeśli zmian nie widać:
 
 | Chcę zmienić...                  | Zakładka         | Co edytować              |
 |----------------------------------|------------------|--------------------------|
+| Opis zespołu (akapity)          | O_Nas            | Kolumny "Akapit_1/2"     |
 | Nazwisko muzyka                  | Kim_Jesteśmy     | Kolumna "Imię"           |
 | Instrument muzyka                | Kim_Jesteśmy     | Kolumna "Instrument"     |
 | Dodać/usunąć utwór              | Repertuar        | Dodaj/usuń rząd          |

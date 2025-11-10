@@ -16,6 +16,7 @@ const CONFIG = {
   INDEX_PATH: path.join(__dirname, '..', 'index.html'),
   BACKUP_PATH: path.join(__dirname, '..', 'index.backup.html'),
   RANGES: {
+    oNas: 'O_Nas!A2:B2',
     kimJestesmy: 'Kim_Jesteśmy!A2:D100',
     repertuar: 'Repertuar!A2:C200',
     wydarzenia: 'Wydarzenia!A2:D100',
@@ -77,6 +78,33 @@ async function fetchSheetData(sheets, range) {
     console.error(`❌ Error fetching data from range "${range}":`, error.message);
     return [];
   }
+}
+
+/**
+ * Build HTML for "O Nas" section (2 paragraphs)
+ */
+function buildONasHTML(data) {
+  if (!data || data.length === 0 || !data[0]) {
+    return '<!-- Brak danych O Nas -->';
+  }
+
+  const [akapit1, akapit2] = data[0];
+
+  if (!akapit1 && !akapit2) {
+    return '<!-- Brak danych O Nas -->';
+  }
+
+  let html = '';
+
+  if (akapit1) {
+    html += `                    <p class="ensemble__description">${akapit1}</p>\n`;
+  }
+
+  if (akapit2) {
+    html += `                    <p class="ensemble__description">${akapit2}</p>`;
+  }
+
+  return html;
 }
 
 /**
@@ -202,9 +230,15 @@ function buildGaleriaHTML(data) {
 /**
  * Read current index.html and replace dynamic sections
  */
-function buildHTMLFile(ensembleHTML, repertuarHTML, kalendarzHTML, galeriaHTML) {
+function buildHTMLFile(oNasHTML, ensembleHTML, repertuarHTML, kalendarzHTML, galeriaHTML) {
   try {
     let html = fs.readFileSync(CONFIG.INDEX_PATH, 'utf8');
+
+    // Replace O Nas paragraphs in ensemble section
+    html = html.replace(
+      /(<h2 class="ensemble__heading">KIM JESTEŚMY<\/h2>)([\s\S]*?)(<div class="ensemble__stats">)/m,
+      `$1\n${oNasHTML}\n\n$3`
+    );
 
     // Replace ensemble team members
     html = html.replace(
@@ -252,13 +286,15 @@ async function build() {
     // Fetch all data
     console.log('📥 Fetching data from sheets...');
 
-    const [kimJestesmyData, repertuarData, wydarzeniaData, galeriaData] = await Promise.all([
+    const [oNasData, kimJestesmyData, repertuarData, wydarzeniaData, galeriaData] = await Promise.all([
+      fetchSheetData(sheets, CONFIG.RANGES.oNas),
       fetchSheetData(sheets, CONFIG.RANGES.kimJestesmy),
       fetchSheetData(sheets, CONFIG.RANGES.repertuar),
       fetchSheetData(sheets, CONFIG.RANGES.wydarzenia),
       fetchSheetData(sheets, CONFIG.RANGES.galeria)
     ]);
 
+    console.log(`  ✓ O Nas: ${oNasData.length > 0 ? '2 akapity' : '0 akapitów'}`);
     console.log(`  ✓ Kim Jesteśmy: ${kimJestesmyData.length} członków`);
     console.log(`  ✓ Repertuar: ${repertuarData.length} utworów`);
     console.log(`  ✓ Wydarzenia: ${wydarzeniaData.length} wydarzeń`);
@@ -273,13 +309,14 @@ async function build() {
 
     // Build HTML sections
     console.log('🔨 Building HTML sections...');
+    const oNasHTML = buildONasHTML(oNasData);
     const ensembleHTML = buildEnsembleHTML(kimJestesmyData);
     const repertuarHTML = buildRepertuarHTML(repertuarData);
     const kalendarzHTML = buildKalendarzHTML(wydarzeniaData);
     const galeriaHTML = buildGaleriaHTML(galeriaData);
 
     // Build final HTML
-    const finalHTML = buildHTMLFile(ensembleHTML, repertuarHTML, kalendarzHTML, galeriaHTML);
+    const finalHTML = buildHTMLFile(oNasHTML, ensembleHTML, repertuarHTML, kalendarzHTML, galeriaHTML);
 
     // Write to file
     fs.writeFileSync(CONFIG.INDEX_PATH, finalHTML, 'utf8');
