@@ -42,12 +42,14 @@ async function initSheetsAPI() {
     if (process.env.GOOGLE_SERVICE_ACCOUNT_JSON) {
       console.log('  📍 Running on Vercel - using env vars');
       credentials = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON);
-    } else {
+    } else if (fs.existsSync(CONFIG.CREDENTIALS_PATH)) {
       // Local development - read from file
       console.log('  📍 Running locally - using credentials file');
       credentials = JSON.parse(
         fs.readFileSync(CONFIG.CREDENTIALS_PATH, 'utf8')
       );
+    } else {
+      throw new Error('No credentials found! Set GOOGLE_SERVICE_ACCOUNT_JSON environment variable or create google-credentials.json file.');
     }
 
     const auth = new google.auth.GoogleAuth({
